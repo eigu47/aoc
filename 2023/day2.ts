@@ -20,20 +20,22 @@ const input = (fs.readFileSync("day2", "utf8") as string)
         }, {} as Record<string, number>)
     );
   })
-  .reduce((acc, game, i) => {
-    let isPossible = true;
-    for (const set of game) {
-      for (const [color, amount] of Object.entries(elfCubes)) {
-        if (set[color] > amount) {
-          isPossible = false;
-        }
-      }
-      if (!isPossible) {
-        break;
-      }
-    }
+  .reduce((acc, game) => {
+    let min = {
+      red: 0,
+      green: 0,
+      blue: 0,
+    };
 
-    return isPossible ? i + 1 + acc : acc;
+    game.forEach((set) => {
+      Object.entries(set).forEach(([color, amount]) => {
+        if (amount > min[color as keyof typeof min]) {
+          min[color as keyof typeof min] = amount;
+        }
+      });
+    });
+
+    return acc + Object.values(min).reduce((acc, val) => acc * val, 1);
   }, 0);
 
 console.log(input);
