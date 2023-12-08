@@ -45,3 +45,5 @@ const input = (fs.readFileSync("day1", "utf8") as string)
   .reduce((acc, cur) => acc + +cur, 0);
 
 console.log(input);
+
+export {};
