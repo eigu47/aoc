@@ -11,7 +11,16 @@ const [seed, ...maps] = fs
       .map((str) => str.match(/\d+/g)?.map(Number) ?? [])
   );
 
-const result = seed[0].map((num) =>
+const newSeeds = seed[0].reduce((acc, num, idx, arr) => {
+  if (idx % 2 === 0) {
+    for (let i = num; i < num + arr[idx + 1]; i++) {
+      acc.push(i);
+    }
+  }
+  return acc;
+}, [] as number[]);
+
+const result = newSeeds.map((num) =>
   maps.reduce((acc, map) => {
     for (const [destination, origin, range] of map) {
       if (acc >= origin && acc < origin + range) {
@@ -24,3 +33,4 @@ const result = seed[0].map((num) =>
 );
 
 console.log(Math.min(...result));
+console.log(newSeeds);
