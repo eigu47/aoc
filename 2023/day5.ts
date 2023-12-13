@@ -1,7 +1,7 @@
 import fs from "fs";
 
 const [seed, ...maps] = fs
-  .readFileSync("test", "utf8")
+  .readFileSync("day5", "utf8")
   .split("\r\n\r\n")
   .map((line) =>
     line
@@ -13,22 +13,18 @@ const [seed, ...maps] = fs
 
 function getDestination(seed: number[]) {
   return seed.map((num) => {
-    return maps.reduce((acc, map, idx) => {
-      let result = acc;
-
-      console.log({ acc, map, idx, num });
-      
-      map.forEach((line) => {
+    return maps.reduce((acc, map) => {
+      for (const line of map) {
         const [destination, origin, range] = line!;
-        if (result >= origin && result < origin + range) {
-          result = result - origin + destination;
-          return;
+        if (acc >= origin && acc < origin + range) {
+          acc = acc - origin + destination;
+          break;
         }
-      });
+      }
 
-      return result;
+      return acc;
     }, num);
   });
 }
 
-console.log(getDestination(seed[0]!));
+console.log(Math.min(...getDestination(seed[0]!)));
