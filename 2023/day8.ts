@@ -1,29 +1,29 @@
 import fs from "fs";
 
-const [instructions, rest] = fs.readFileSync("day8", "utf8").split("\r\n\r\n");
+fs.readFile("day8", "utf8", (_, data) => {
+  const [directions, ...rest] = data.split("\r");
 
-const nodes = rest.split("\r\n").reduce((acc, line) => {
-  const [node, dir] = line.split("=").map((s) => s.match(/\w+/g));
-  if (!node || !dir) return acc;
+  const nodes = rest.reduce((acc, line) => {
+    const [node, dir] = line.split("=").map((s) => s.match(/\w+/g));
+    if (!node || !dir) return acc;
 
-  acc[node + ""] = {
-    L: dir[0],
-    R: dir[1],
-  };
+    acc[node + ""] = {
+      L: dir[0],
+      R: dir[1],
+    };
 
-  return acc;
-}, {} as Record<string, { L: string; R: string }>);
+    return acc;
+  }, {} as Record<string, { L: string; R: string }>);
 
-function getNode(key = "AAA", steps = 0) {
-  if (key === "ZZZ") return steps;
+  let current = "AAA";
+  let steps = 0;
 
-  const node = nodes[key];
-  const dir = instructions[steps % instructions.length] as "L" | "R";
-  const next = node[dir];
+  while (current !== "ZZZ") {
+    const node = nodes[current];
+    const dir = directions[steps % directions.length] as "L" | "R";
+    current = node[dir];
+    steps++;
+  }
 
-  console.log({ key, dir, next, steps });
-
-  return getNode(next, steps + 1);
-}
-
-console.log(getNode());
+  console.log(steps);
+});
