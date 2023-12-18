@@ -1,30 +1,9 @@
 import fs from "fs";
 
 fs.readFile("day11", "utf8", (_, data) => {
-  const rows = data.split("\r\n").map((row) => row.split(""));
-  const expandedRows = rows.reduce((acc, row) => {
-    acc.push(row);
-    if (row.every((cell) => cell === ".")) {
-      acc.push(row);
-    }
-    return acc;
-  }, [] as string[][]);
+  const universe = data.split("\r\n").map((row) => row.split(""));
 
-  const expanded: string[][] = expandedRows[0].reduce((acc, _, y) => {
-    const column = expandedRows.map((row) => row[y]);
-    const isEmpty = column.every((cell) => cell === ".");
-
-    column.forEach((cell, x) => {
-      acc[x].push(cell);
-      if (isEmpty) {
-        acc[x].push(cell);
-      }
-    });
-
-    return acc;
-  }, expandedRows.map(() => []) as string[][]);
-
-  const galaxies = expanded.reduce((acc, row, y) => {
+  const galaxies = universe.reduce((acc, row, y) => {
     row.forEach((cell, x) => {
       if (cell === "#") {
         acc.push([x, y]);
@@ -33,6 +12,29 @@ fs.readFile("day11", "utf8", (_, data) => {
 
     return acc;
   }, [] as number[][]);
+
+  [...universe].reverse().forEach((row, idx) => {
+    idx = universe[0].length - 1 - idx;
+    if (row.every((cell) => cell === ".")) {
+      galaxies.forEach((galaxy) => {
+        if (galaxy[1] > idx) {
+          galaxy[1] += 999_999;
+        }
+      });
+    }
+  });
+
+  [...universe[0]].reverse().forEach((_, idx) => {
+    idx = universe[0].length - 1 - idx;
+    const column = universe.map((row) => row[idx]);
+    if (column.every((cell) => cell === ".")) {
+      galaxies.forEach((galaxy) => {
+        if (galaxy[0] > idx) {
+          galaxy[0] += 999_999;
+        }
+      });
+    }
+  });
 
   let total = 0;
   for (let i = 0; i < galaxies.length; i++) {
