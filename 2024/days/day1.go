@@ -35,3 +35,27 @@ func Part1() int {
 
 	return res
 }
+
+func Part2() int {
+	input := util.GetInput(2024, 1)
+
+	var res int
+	left := make(map[int]int)
+	right := make(map[int]int)
+
+	for _, line := range input {
+		parts := strings.Fields(line)
+
+		l, _ := strconv.Atoi(parts[0])
+		r, _ := strconv.Atoi(parts[1])
+
+		left[l]++
+		right[r]++
+	}
+
+	for id, times := range left {
+		res += (id * right[id]) * times
+	}
+
+	return res
+}
