@@ -1,24 +1,37 @@
 package days
 
 import (
-	"fmt"
-	"log"
+	"math"
+	"sort"
+	"strconv"
+	"strings"
 
 	"github.com/eigu47/aoc2023/util"
 )
 
 func Part1() int {
-	input, err := util.NewInput()
-	if err != nil {
-		log.Fatalln(err)
+	input := util.GetInput(2024, 1)
+
+	var right, left []int
+
+	for _, line := range input {
+		parts := strings.Fields(line)
+
+		l, _ := strconv.Atoi(parts[0])
+		r, _ := strconv.Atoi(parts[1])
+
+		left = append(left, l)
+		right = append(right, r)
 	}
 
-	data, err := input.Strings(2024, 1)
-	if err != nil {
-		log.Fatalln(err)
+	sort.Ints(left)
+	sort.Ints(right)
+
+	var res int
+
+	for i := 0; i < len(left); i++ {
+		res += int(math.Abs(float64(left[i] - right[i])))
 	}
 
-	fmt.Printf("%v\n", data)
-
-	return 0
+	return res
 }
