@@ -9,7 +9,7 @@ import (
 	"github.com/eigu47/aoc2023/util"
 )
 
-func Part1() int {
+func Day1_1() int {
 	input := util.GetInput(2024, 1)
 
 	var right, left []int
@@ -36,7 +36,7 @@ func Part1() int {
 	return res
 }
 
-func Part2() int {
+func Day1_2() int {
 	input := util.GetInput(2024, 1)
 
 	var res int
