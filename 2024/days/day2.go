@@ -28,19 +28,59 @@ func Day2_1() int {
 				dec = false
 			}
 
-			if !(inc || dec) {
-				isSafe = false
-				break
-			}
-
 			d := diff(lastReport, report)
-			if d < 1 || d > 3 {
+			if !(inc || dec) || (d < 1 || d > 3) {
 				isSafe = false
 				// fmt.Printf("%d %d", lastReport, report)
 				break
 			}
 
 			lastReport = report
+		}
+
+		if isSafe {
+			res++
+			// fmt.Println(line)
+		}
+	}
+
+	return res
+}
+
+func Day2_2() int {
+	input := util.GetInput(2024, 2)
+
+	res := 0
+
+	for _, line := range input {
+		level := strings.Fields(line)
+
+		isSafe := true
+		lastReport, _ := strconv.Atoi(level[0])
+		inc := true
+		dec := true
+		bad := 0
+
+		for i := 1; i < len(level); i++ {
+			report, _ := strconv.Atoi(level[i])
+			if report <= lastReport {
+				inc = false
+			} else if report >= lastReport {
+				dec = false
+			}
+
+			d := diff(lastReport, report)
+			if !(inc || dec) || (d < 1 || d > 3) {
+				if bad > 0 {
+					isSafe = false
+					break
+				}
+				bad++
+				inc = true
+				dec = true
+			} else {
+				lastReport = report
+			}
 		}
 
 		if isSafe {
