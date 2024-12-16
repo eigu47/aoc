@@ -20,17 +20,17 @@ func GetInput(year, day int) []string {
 	}
 	defer data.Close()
 
-	var strs []string
+	var input []string
 	sc := bufio.NewScanner(data)
 	for sc.Scan() {
-		strs = append(strs, sc.Text())
+		input = append(input, sc.Text())
 	}
 
 	if err := sc.Err(); err != nil {
 		log.Fatal(err)
 	}
 
-	return strs
+	return input
 }
 
 func getData(year, day int) (io.ReadCloser, error) {
@@ -67,17 +67,16 @@ func getData(year, day int) (io.ReadCloser, error) {
 	}
 	defer res.Body.Close()
 
-	if res.StatusCode != 200 {
-		body, _ := io.ReadAll(res.Body)
-		return nil, errors.New(string(body))
-	}
-
-	// save
 	data, err := io.ReadAll(res.Body)
 	if err != nil {
 		return nil, err
 	}
 
+	if res.StatusCode != http.StatusOK {
+		return nil, errors.New(string(data))
+	}
+
+	// save
 	if _, err := os.Stat(dir); os.IsNotExist(err) {
 		if err := os.MkdirAll(dir, os.ModePerm); err != nil {
 			return nil, err
