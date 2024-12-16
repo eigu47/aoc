@@ -24,13 +24,13 @@ func Day5_1() int {
 
 		if isRules {
 			pages := strings.Split(line, "|")
-			p1, _ := strconv.Atoi(pages[0])
-			p2, _ := strconv.Atoi(pages[1])
-			rules[p1] = append(rules[p1], p2)
+			rgt, _ := strconv.Atoi(pages[0])
+			lft, _ := strconv.Atoi(pages[1])
+			rules[rgt] = append(rules[rgt], lft)
 		} else {
 			var update []int
-			for _, s := range strings.Split(line, ",") {
-				num, _ := strconv.Atoi(s)
+			for _, u := range strings.Split(line, ",") {
+				num, _ := strconv.Atoi(u)
 				update = append(update, num)
 			}
 			updates = append(updates, update)
@@ -47,7 +47,7 @@ func Day5_1() int {
 		}
 
 		if isValid {
-			res += update[int(len(update)/2)]
+			res += update[len(update)/2]
 		}
 	}
 
