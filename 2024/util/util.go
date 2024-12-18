@@ -1,14 +1,13 @@
 package util
 
 import (
-	"bufio"
-	"bytes"
 	"errors"
 	"fmt"
 	"io"
 	"log"
 	"net/http"
 	"os"
+	"strings"
 
 	"github.com/joho/godotenv"
 )
@@ -18,26 +17,15 @@ func GetInput(year, day int) []string {
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer data.Close()
 
-	var input []string
-	sc := bufio.NewScanner(data)
-	for sc.Scan() {
-		input = append(input, sc.Text())
-	}
-
-	if err := sc.Err(); err != nil {
-		log.Fatal(err)
-	}
-
-	return input
+	return strings.Split(string(data), "\n")
 }
 
-func getData(year, day int) (io.ReadCloser, error) {
+func getData(year, day int) ([]byte, error) {
 	dir := "input"
 	filePath := fmt.Sprintf("%s/%d_%d.txt", dir, year, day)
 
-	file, err := os.Open(filePath)
+	file, err := os.ReadFile(filePath)
 	if err == nil {
 		return file, nil
 	}
@@ -67,6 +55,12 @@ func getData(year, day int) (io.ReadCloser, error) {
 	}
 	defer res.Body.Close()
 
+	if res.StatusCode != http.StatusOK {
+		body, _ := io.ReadAll(res.Body)
+		return nil, errors.New(string(body))
+	}
+
+	// save
 	data, err := io.ReadAll(res.Body)
 	if err != nil {
 		return nil, err
@@ -87,5 +81,5 @@ func getData(year, day int) (io.ReadCloser, error) {
 		return nil, err
 	}
 
-	return io.NopCloser(bytes.NewReader(data)), nil
+	return data, nil
 }
