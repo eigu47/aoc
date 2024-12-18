@@ -1,12 +1,12 @@
-package days
+package day4
 
 import (
 	"github.com/eigu47/aoc2023/util"
 )
 
-func Day4_1() int {
-	var input = util.GetInput(2024, 4)
+var input = util.GetInput(2024, 4)
 
+func Part1() int {
 	STR := "XMAS"
 	DIR := [8][2]int{
 		{-1, -1},
@@ -47,9 +47,7 @@ func Day4_1() int {
 	return res
 }
 
-func Day4_2() int {
-	var input = util.GetInput(2024, 4)
-
+func Part2() int {
 	DIR := [2][2][2]int{
 		{{-1, -1}, {1, 1}},
 		{{-1, 1}, {1, -1}},

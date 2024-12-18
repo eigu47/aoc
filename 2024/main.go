@@ -3,20 +3,25 @@ package main
 import (
 	"fmt"
 
-	"github.com/eigu47/aoc2023/days"
+	"github.com/eigu47/aoc2023/days/day1"
+	"github.com/eigu47/aoc2023/days/day2"
+	"github.com/eigu47/aoc2023/days/day3"
+	"github.com/eigu47/aoc2023/days/day4"
+	"github.com/eigu47/aoc2023/days/day5"
+	"github.com/eigu47/aoc2023/days/day6"
 )
 
 func main() {
-	// fmt.Printf("Day1: %v\n", days.Day1_1())
-	// fmt.Printf("Day1: %v\n", days.Day1_2())
-	// fmt.Printf("Day2: %v\n", days.Day2_1())
-	// fmt.Printf("Day2: %v\n", days.Day2_2())
-	// fmt.Printf("Day3: %v\n", days.Day3_1())
-	// fmt.Printf("Day3: %v\n", days.Day3_2())
-	// fmt.Printf("Day4: %v\n", days.Day4_1())
-	// fmt.Printf("Day4: %v\n", days.Day4_2())
-	// fmt.Printf("Day5: %v\n", days.Day5_1())
-	// fmt.Printf("Day5: %v\n", days.Day5_2())
-	fmt.Printf("Day6: %v\n", days.Day6_1())
+	fmt.Printf("Day1: %v\n", day1.Part1())
+	fmt.Printf("Day1: %v\n", day1.Part2())
+	fmt.Printf("Day2: %v\n", day2.Part1())
+	fmt.Printf("Day2: %v\n", day2.Part2())
+	fmt.Printf("Day3: %v\n", day3.Part1())
+	fmt.Printf("Day3: %v\n", day3.Part2())
+	fmt.Printf("Day4: %v\n", day4.Part1())
+	fmt.Printf("Day4: %v\n", day4.Part2())
+	fmt.Printf("Day5: %v\n", day5.Part1())
+	fmt.Printf("Day5: %v\n", day5.Part2())
+	fmt.Printf("Day6: %v\n", day6.Part1())
 	// fmt.Printf("Day6: %v\n", days.Day6_2())
 }

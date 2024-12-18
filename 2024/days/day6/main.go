@@ -1,19 +1,19 @@
-package days
+package day6
 
 import (
 	"github.com/eigu47/aoc2023/util"
 )
 
-func Day6_1() int {
-	input := util.GetInput(2024, 6)
-	result := map[[2]int]bool{}
+var input = util.GetInput(2024, 6)
+var dirs = map[int][2]int{
+	0: {-1, 0},
+	3: {0, -1},
+	1: {0, 1},
+	2: {1, 0},
+}
 
-	DIRS := map[int][2]int{
-		0: {-1, 0},
-		3: {0, -1},
-		1: {0, 1},
-		2: {1, 0},
-	}
+func Part1() int {
+	result := map[[2]int]bool{}
 
 	dir := 0
 	pos := [2]int{}
@@ -34,14 +34,14 @@ func Day6_1() int {
 	next := [2]int{}
 	for {
 		// next := [2]int{pos[0] + DIRS[dir][0], pos[1] + DIRS[dir][1]}
-		next[0], next[1] = pos[0] + DIRS[dir][0], pos[1] + DIRS[dir][1]
+		next[0], next[1] = pos[0]+dirs[dir][0], pos[1]+dirs[dir][1]
 		if next[0] < 0 || next[0] >= len(input) || next[1] < 0 || next[1] >= len(input[0]) {
 			break
 		}
 
 		if _, ok := obs[next]; ok {
 			dir = (dir + 1) % 4
-			next[0], next[1] = pos[0] + DIRS[dir][0], pos[1] + DIRS[dir][1]
+			next[0], next[1] = pos[0]+dirs[dir][0], pos[1]+dirs[dir][1]
 		}
 
 		pos = next

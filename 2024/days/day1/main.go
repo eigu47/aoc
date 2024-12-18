@@ -1,4 +1,4 @@
-package days
+package day1
 
 import (
 	"math"
@@ -9,9 +9,9 @@ import (
 	"github.com/eigu47/aoc2023/util"
 )
 
-func Day1_1() int {
-	input := util.GetInput(2024, 1)
+var input = util.GetInput(2024, 1)
 
+func Part1() int {
 	var right, left []int
 
 	for _, line := range input {
@@ -36,9 +36,7 @@ func Day1_1() int {
 	return res
 }
 
-func Day1_2() int {
-	input := util.GetInput(2024, 1)
-
+func Part2() int {
 	var res int
 	left := make(map[int]int)
 	right := make(map[int]int)

@@ -1,4 +1,4 @@
-package days
+package day5
 
 import (
 	"slices"
@@ -9,13 +9,12 @@ import (
 	"github.com/eigu47/aoc2023/util"
 )
 
-func Day5_1() int {
-	var input = util.GetInput(2024, 5)
+var input = util.GetInput(2024, 5)
 
-	updates := [][]int{}
-	rules := make(map[int][]int)
-	res := 0
+var rules = make(map[int][]int)
+var updates = [][]int{}
 
+func init() {
 	isRules := true
 	for _, line := range input {
 		if line == "" {
@@ -37,6 +36,10 @@ func Day5_1() int {
 			updates = append(updates, update)
 		}
 	}
+}
+
+func Part1() int {
+	res := 0
 
 	for _, update := range updates {
 		isValid := true
@@ -55,34 +58,8 @@ func Day5_1() int {
 	return res
 }
 
-func Day5_2() int {
-	var input = util.GetInput(2024, 5)
-
-	updates := [][]int{}
-	rules := make(map[int][]int)
+func Part2() int {
 	res := 0
-
-	isRules := true
-	for _, line := range input {
-		if line == "" {
-			isRules = false
-			continue
-		}
-
-		if isRules {
-			pages := strings.Split(line, "|")
-			rgt, _ := strconv.Atoi(pages[0])
-			lft, _ := strconv.Atoi(pages[1])
-			rules[rgt] = append(rules[rgt], lft)
-		} else {
-			var update []int
-			for _, u := range strings.Split(line, ",") {
-				num, _ := strconv.Atoi(u)
-				update = append(update, num)
-			}
-			updates = append(updates, update)
-		}
-	}
 
 	for _, update := range updates {
 		isValid := true

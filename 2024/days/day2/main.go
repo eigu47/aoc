@@ -1,4 +1,4 @@
-package days
+package day2
 
 import (
 	"strconv"
@@ -7,9 +7,9 @@ import (
 	"github.com/eigu47/aoc2023/util"
 )
 
-func Day2_1() int {
-	input := util.GetInput(2024, 2)
+var input = util.GetInput(2024, 2)
 
+func Part1() int {
 	res := 0
 
 	for _, line := range input {
@@ -47,9 +47,7 @@ func Day2_1() int {
 	return res
 }
 
-func Day2_2() int {
-	input := util.GetInput(2024, 2)
-
+func Part2() int {
 	res := 0
 
 	for _, line := range input {

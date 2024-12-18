@@ -1,4 +1,4 @@
-package days
+package day3
 
 import (
 	"regexp"
@@ -7,9 +7,9 @@ import (
 	"github.com/eigu47/aoc2023/util"
 )
 
-func Day3_1() int {
-	input := util.GetInput(2024, 3)
+var input = util.GetInput(2024, 3)
 
+func Part1() int {
 	res := 0
 
 	for _, line := range input {
@@ -23,9 +23,7 @@ func Day3_1() int {
 	return res
 }
 
-func Day3_2() int {
-	input := util.GetInput(2024, 3)
-
+func Part2() int {
 	res := 0
 	do := true
 
