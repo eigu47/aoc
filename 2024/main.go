@@ -16,5 +16,7 @@ func main() {
 	// fmt.Printf("Day4: %v\n", days.Day4_1())
 	// fmt.Printf("Day4: %v\n", days.Day4_2())
 	// fmt.Printf("Day5: %v\n", days.Day5_1())
-	fmt.Printf("Day5: %v\n", days.Day5_2())
+	// fmt.Printf("Day5: %v\n", days.Day5_2())
+	fmt.Printf("Day6: %v\n", days.Day6_1())
+	// fmt.Printf("Day6: %v\n", days.Day6_2())
 }
