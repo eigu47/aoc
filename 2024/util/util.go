@@ -1,13 +1,14 @@
 package util
 
 import (
+	"bufio"
+	"bytes"
 	"errors"
 	"fmt"
 	"io"
 	"log"
 	"net/http"
 	"os"
-	"strings"
 
 	"github.com/joho/godotenv"
 )
@@ -17,15 +18,26 @@ func GetInput(year, day int) []string {
 	if err != nil {
 		log.Fatal(err)
 	}
+	defer data.Close()
 
-	return strings.Split(string(data), "\n")
+	var input []string
+	sc := bufio.NewScanner(data)
+	for sc.Scan() {
+		input = append(input, sc.Text())
+	}
+
+	if err := sc.Err(); err != nil {
+		log.Fatal(err)
+	}
+
+	return input
 }
 
-func getData(year, day int) ([]byte, error) {
+func getData(year, day int) (io.ReadCloser, error) {
 	dir := "input"
 	filePath := fmt.Sprintf("%s/%d_%d.txt", dir, year, day)
 
-	file, err := os.ReadFile(filePath)
+	file, err := os.Open(filePath)
 	if err == nil {
 		return file, nil
 	}
@@ -75,5 +87,5 @@ func getData(year, day int) ([]byte, error) {
 		return nil, err
 	}
 
-	return data, nil
+	return io.NopCloser(bytes.NewReader(data)), nil
 }

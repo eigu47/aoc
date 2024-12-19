@@ -1,6 +1,7 @@
 package day7
 
 import (
+	"fmt"
 	"strconv"
 	"strings"
 
@@ -28,19 +29,40 @@ func init() {
 	}
 }
 
-func test(nums *[]int, sum int, idx int, res int) bool {
+func test1(nums *[]int, sum int, idx int, res int) bool {
 	if idx == len(*nums) {
 		return sum == res
 	}
 
-	return test(nums, sum+(*nums)[idx], idx+1, res) || test(nums, sum*(*nums)[idx], idx+1, res)
+	return test1(nums, sum+(*nums)[idx], idx+1, res) || test1(nums, sum*(*nums)[idx], idx+1, res)
 }
 
 func Part1() int {
 	totalRes := 0
 
 	for i, res := range results {
-		if test(&numbers[i], 0, 0, res) {
+		if test1(&numbers[i], 0, 0, res) {
+			totalRes += res
+		}
+	}
+
+	return totalRes
+}
+
+func test2(nums *[]int, sum int, idx int, res int) bool {
+	if idx == len(*nums) {
+		return sum == res
+	}
+
+	or, _ := strconv.Atoi(fmt.Sprintf("%d%d", sum, (*nums)[idx]))
+	return test2(nums, sum+(*nums)[idx], idx+1, res) || test2(nums, sum*(*nums)[idx], idx+1, res) || test2(nums, or, idx+1, res)
+}
+
+func Part2() int {
+	totalRes := 0
+
+	for i, res := range results {
+		if test2(&numbers[i], 0, 0, res) {
 			totalRes += res
 		}
 	}
