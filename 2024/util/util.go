@@ -55,12 +55,6 @@ func getData(year, day int) ([]byte, error) {
 	}
 	defer res.Body.Close()
 
-	if res.StatusCode != http.StatusOK {
-		body, _ := io.ReadAll(res.Body)
-		return nil, errors.New(string(body))
-	}
-
-	// save
 	data, err := io.ReadAll(res.Body)
 	if err != nil {
 		return nil, err
