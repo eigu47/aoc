@@ -1,27 +1,22 @@
 package day9
 
 import (
-	"fmt"
 	"strconv"
 
 	"github.com/eigu47/aoc2023/util"
 )
 
-var intput = util.GetInput(2024, 9)
+var input = util.GetInput(2024, 9)
 var disk = []int{}
-var last = 0
 
 func init() {
-	fileId := 0
-	for _, line := range intput {
+	for _, line := range input {
 		for i, rune := range line {
 			num, _ := strconv.Atoi(string(rune))
 			if i%2 == 0 {
 				for range num {
-					disk = append(disk, fileId)
+					disk = append(disk, i/2)
 				}
-				fileId++
-				last = len(disk)
 			} else {
 				for range num {
 					disk = append(disk, -1)
@@ -34,29 +29,28 @@ func init() {
 func Part1() int {
 	res := 0
 
-	for i := 0; i < last; i++ {
-		if disk[i] == -1 {
-			for j := last - 1; j >= 0 && disk[j] == -1; j-- {
-				last = j
+	for lft, rgt := 0, len(disk)-1; lft < rgt; lft++ {
+		if disk[lft] == -1 {
+			for disk[rgt] == -1 {
+				rgt--
 			}
 
-			disk[i], disk[last-1] = disk[last-1], disk[i]
-			last--
+			disk[lft], disk[rgt] = disk[rgt], disk[lft]
 		}
 	}
 
-	for i := range last {
+	for i := 0; i < len(disk) && disk[i] != -1; i++ {
 		res += i * disk[i]
 	}
 
-	for i := range len(disk) {
-		if disk[i] != -1 {
-			fmt.Printf("%+v", disk[i])
-		} else {
-			fmt.Printf(".")
-		}
-	}
-	fmt.Println()
+	// for i := range len(disk) {
+	// 	if disk[i] != -1 {
+	// 		fmt.Printf("%+v", disk[i])
+	// 	} else {
+	// 		fmt.Printf(".")
+	// 	}
+	// }
+	// fmt.Println()
 
 	return res
 }
