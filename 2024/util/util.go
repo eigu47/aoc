@@ -89,3 +89,14 @@ func getData(year, day int) (io.ReadCloser, error) {
 
 	return io.NopCloser(bytes.NewReader(data)), nil
 }
+
+func IsInBounds[T any](pos [2]int, grid T) bool {
+	switch v := any(grid).(type) {
+	case [][]T:
+		return pos[0] >= 0 && pos[0] < len(v) && pos[1] >= 0 && pos[1] < len(v[0])
+	case []string:
+		return pos[0] >= 0 && pos[0] < len(v) && pos[1] >= 0 && pos[1] < len(v[0])
+	default:
+		return false
+	}
+}
