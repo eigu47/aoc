@@ -23,18 +23,21 @@ func init() {
 	}
 }
 
-func run(pos [2]int, peaks map[[2]int]bool) {
+func run(pos [2]int, height int, peaks map[[2]int]bool) int {
+	if !util.IsInBounds(pos, input) || grid[pos[0]][pos[1]] != height {
+		return 0
+	}
+
 	if grid[pos[0]][pos[1]] == 9 {
 		peaks[pos] = true
-		return
+		return 0
 	}
 
 	for _, dir := range directions {
-		next := [2]int{pos[0] + dir[0], pos[1] + dir[1]}
-		if util.IsInBounds(next, input) && grid[pos[0]][pos[1]]+1 == grid[next[0]][next[1]] {
-			run(next, peaks)
-		}
+		run([2]int{pos[0] + dir[0], pos[1] + dir[1]}, height+1, peaks)
 	}
+
+	return len(peaks)
 }
 
 func Part1() int {
@@ -43,9 +46,38 @@ func Part1() int {
 	for i, row := range grid {
 		for j, cell := range row {
 			if cell == 0 {
-				peaks := map[[2]int]bool{}
-				run([2]int{i, j}, peaks)
-				res += len(peaks)
+				res += run([2]int{i, j}, 0, map[[2]int]bool{})
+			}
+		}
+	}
+
+	return res
+}
+
+func run2(pos [2]int, height int) int {
+	if !util.IsInBounds(pos, input) || grid[pos[0]][pos[1]] != height {
+		return 0
+	}
+
+	if grid[pos[0]][pos[1]] == 9 {
+		return 1
+	}
+
+	trails := 0
+	for _, dir := range directions {
+		trails += run2([2]int{pos[0] + dir[0], pos[1] + dir[1]}, height+1)
+	}
+
+	return trails
+}
+
+func Part2() int {
+	res := 0
+
+	for i, row := range grid {
+		for j, cell := range row {
+			if cell == 0 {
+				res += run2([2]int{i, j}, 0)
 			}
 		}
 	}
