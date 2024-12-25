@@ -24,7 +24,7 @@ func init() {
 }
 
 func run(pos [2]int, height int, peaks map[[2]int]bool) int {
-	if !util.IsInBounds(pos, input) || grid[pos[0]][pos[1]] != height {
+	if !util.IsInboundStr(pos, input) || grid[pos[0]][pos[1]] != height {
 		return 0
 	}
 
@@ -55,7 +55,7 @@ func Part1() int {
 }
 
 func run2(pos [2]int, height int) int {
-	if !util.IsInBounds(pos, input) || grid[pos[0]][pos[1]] != height {
+	if !util.IsInboundStr(pos, input) || grid[pos[0]][pos[1]] != height {
 		return 0
 	}
 

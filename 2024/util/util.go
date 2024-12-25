@@ -90,13 +90,17 @@ func getData(year, day int) (io.ReadCloser, error) {
 	return io.NopCloser(bytes.NewReader(data)), nil
 }
 
-func IsInBounds[T any](pos [2]int, grid T) bool {
-	switch v := any(grid).(type) {
-	case [][]T:
-		return pos[0] >= 0 && pos[0] < len(v) && pos[1] >= 0 && pos[1] < len(v[0])
-	case []string:
-		return pos[0] >= 0 && pos[0] < len(v) && pos[1] >= 0 && pos[1] < len(v[0])
-	default:
-		return false
-	}
+func IsInbound[T any](pos [2]int, grid [][]T) bool {
+	return pos[0] >= 0 && pos[0] < len(grid) && pos[1] >= 0 && pos[1] < len(grid[0])
+}
+
+func IsInboundStr(pos [2]int, grid []string) bool {
+	return pos[0] >= 0 && pos[0] < len(grid) && pos[1] >= 0 && pos[1] < len(grid[0])
+}
+
+var Directions = [4][2]int{
+	{-1, 0}, // UP
+	{0, 1},  // RGT
+	{1, 0},  // DWN
+	{0, -1}, // LFT
 }
