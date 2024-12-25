@@ -8,6 +8,7 @@ var input = util.GetInput(2024, 12)
 var grid = map[[2]int]rune{}
 
 type plant struct {
+	Char  rune
 	Area  map[[2]int]bool
 	Perim int
 }
@@ -20,8 +21,8 @@ func init() {
 	}
 }
 
-func visit(pos [2]int, char rune, plant *plant, visited map[[2]int]bool) *plant {
-	if _, ok := grid[pos]; !ok || char != grid[pos] {
+func visit(pos [2]int, plant *plant, visited map[[2]int]bool) *plant {
+	if _, ok := grid[pos]; !ok || plant.Char != grid[pos] {
 		plant.Perim++
 		return nil
 	}
@@ -34,7 +35,7 @@ func visit(pos [2]int, char rune, plant *plant, visited map[[2]int]bool) *plant 
 	visited[pos] = true
 
 	for _, dir := range util.Directions {
-		visit([2]int{pos[0] + dir[0], pos[1] + dir[1]}, char, plant, visited)
+		visit([2]int{pos[0] + dir[0], pos[1] + dir[1]}, plant, visited)
 	}
 
 	return plant
@@ -51,7 +52,7 @@ func Part1() int {
 				continue
 			}
 
-			region := visit(pos, char, &plant{map[[2]int]bool{}, 0}, visited)
+			region := visit(pos, &plant{char, map[[2]int]bool{}, 0}, visited)
 			res += len(region.Area) * region.Perim
 		}
 	}
