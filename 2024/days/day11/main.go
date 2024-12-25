@@ -50,7 +50,7 @@ func Part1() int {
 }
 
 func blink2(rune int, cur, total int, cache map[[2]int]int) int {
-	pos := [2]int{cur, rune}
+	pos := [2]int{rune, cur}
 	if val, ok := cache[pos]; ok {
 		return val
 	}
@@ -62,19 +62,16 @@ func blink2(rune int, cur, total int, cache map[[2]int]int) int {
 
 	if rune == 0 {
 		cache[pos] = blink2(1, cur+1, total, cache)
-
-	} else if digits := int(math.Log10(float64(rune))) + 1; digits%2 == 0 {
-		half := int(math.Pow(10, float64(digits/2)))
-		tmp := 0
-
-		tmp += blink2(rune/half, cur+1, total, cache)
-		tmp += blink2(rune%half, cur+1, total, cache)
-		cache[pos] = tmp
-
-	} else {
-		cache[pos] = blink2(rune*2024, cur+1, total, cache)
+		return cache[pos]
 	}
 
+	if digits := int(math.Log10(float64(rune))) + 1; digits%2 == 0 {
+		half := int(math.Pow(10, float64(digits/2)))
+		cache[pos] = blink2(rune/half, cur+1, total, cache) + blink2(rune%half, cur+1, total, cache)
+		return cache[pos]
+	}
+
+	cache[pos] = blink2(rune*2024, cur+1, total, cache)
 	return cache[pos]
 }
 
