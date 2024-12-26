@@ -7,11 +7,12 @@ import (
 var input = util.GetInput(2024, 12)
 var grid = map[[2]int]rune{}
 
-type plant struct {
-	Char  rune
-	Area  map[[2]int]bool
-	Perim int
-}
+// type plant struct {
+// 	Char   rune
+// 	Area   int
+// 	Perim  int
+// 	Border map[[2]int]bool
+// }
 
 func init() {
 	for i, line := range input {
@@ -21,24 +22,26 @@ func init() {
 	}
 }
 
-func visit(pos [2]int, plant *plant, visited map[[2]int]bool) *plant {
-	if _, ok := grid[pos]; !ok || plant.Char != grid[pos] {
-		plant.Perim++
-		return nil
+func visit(pos [2]int, char rune, visited map[[2]int]bool) (int, int) {
+	if _, ok := grid[pos]; !ok || char != grid[pos] {
+		return 0, 1
 	}
 
 	if visited[pos] {
-		return nil
+		return 0, 0
 	}
 
-	plant.Area[pos] = true
+	area := 1
+	perim := 0
 	visited[pos] = true
 
 	for _, dir := range util.Directions {
-		visit([2]int{pos[0] + dir[0], pos[1] + dir[1]}, plant, visited)
+		newArea, newPerim := visit([2]int{pos[0] + dir[0], pos[1] + dir[1]}, char, visited)
+		area += newArea
+		perim += newPerim
 	}
 
-	return plant
+	return area, perim
 }
 
 func Part1() int {
@@ -52,10 +55,36 @@ func Part1() int {
 				continue
 			}
 
-			region := visit(pos, &plant{char, map[[2]int]bool{}, 0}, visited)
-			res += len(region.Area) * region.Perim
+			area, perim := visit(pos, char, visited)
+			res += area * perim
 		}
 	}
 
 	return res
 }
+
+// func Part2() int {
+// 	res := 0
+
+// 	visited := map[[2]int]bool{}
+
+// 	for i, line := range input {
+// 		for j, char := range line {
+// 			pos := [2]int{i, j}
+// 			if visited[pos] {
+// 				continue
+// 			}
+
+// 			region := visit(pos, &plant{
+// 				Char:   char,
+// 				Area:   map[[2]int]bool{},
+// 				Perim:  0,
+// 				Border: map[[2]int]bool{},
+// 			}, visited)
+// 			// res += len(region.Area) * region.Perim
+
+// 		}
+// 	}
+
+// 	return res
+// }
