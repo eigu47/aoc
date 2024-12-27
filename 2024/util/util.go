@@ -104,3 +104,10 @@ var Directions = [4][2]int{
 	{1, 0},  // DWN
 	{0, -1}, // LFT
 }
+
+var Diagonals = [4][2]int{
+	{-1, -1}, // UP LFT
+	{-1, 1},  // UP RGT
+	{1, -1},  // DWN LFT
+	{1, 1},   // DWN RGT
+}
