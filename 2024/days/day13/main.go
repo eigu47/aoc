@@ -56,3 +56,20 @@ func Part1() int {
 
 	return res
 }
+
+func Part2() int {
+	res := 0
+
+	for _, m := range machines {
+		m.Price[0] += 10000000000000
+		m.Price[1] += 10000000000000
+		a := (m.Price[0]*m.B[1] - m.Price[1]*m.B[0]) / (m.A[0]*m.B[1] - m.A[1]*m.B[0])
+		b := (m.Price[1]*m.A[0] - m.Price[0]*m.A[1]) / (m.A[0]*m.B[1] - m.A[1]*m.B[0])
+
+		if m.A[0]*a+m.B[0]*b == m.Price[0] && m.A[1]*a+m.B[1]*b == m.Price[1] {
+			res += 3*a + b
+		}
+	}
+
+	return res
+}
