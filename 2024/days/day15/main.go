@@ -7,10 +7,16 @@ import (
 var input = util.GetInput(2024, 15)
 
 var gridSize = [2]int{0, 0}
-var walls = map[[2]int]bool{}
-var boxes = map[[2]int]bool{}
-var robot = [2]int{}
+var grid = map[[2]int]rune{}
+var robotPos = [2]int{}
 var movements = [][2]int{}
+
+const (
+	robot = '@'
+	wall  = '#'
+	box   = 'O'
+	empty = '.'
+)
 
 var directions = map[rune][2]int{
 	'^': {-1, 0},
@@ -35,13 +41,15 @@ func init() {
 				}
 
 				pos := [2]int{i, j}
-				if cell == '#' {
-					walls[pos] = true
-				} else if cell == 'O' {
-					boxes[pos] = true
-				} else if cell == '@' {
-					robot = pos
+				if cell == empty {
+					continue
 				}
+
+				grid[pos] = cell
+				if cell == robot {
+					robotPos = pos
+				}
+
 				continue
 			}
 
@@ -53,11 +61,11 @@ func init() {
 }
 
 func nextEmpty(pos [2]int, mov [2]int) ([2]int, bool) {
-	if walls[pos] {
+	if grid[pos] == wall {
 		return pos, false
 	}
 
-	if boxes[pos] {
+	if grid[pos] == box {
 		return nextEmpty([2]int{pos[0] + mov[0], pos[1] + mov[1]}, mov)
 	}
 
@@ -68,38 +76,38 @@ func Part1() int {
 	res := 0
 
 	for _, mov := range movements {
-		next := [2]int{robot[0] + mov[0], robot[1] + mov[1]}
+		next := [2]int{robotPos[0] + mov[0], robotPos[1] + mov[1]}
 
-		if walls[next] {
+		if grid[next] == wall {
 			continue
 		}
 
-		if boxes[next] {
+		if grid[next] == box {
 			empty, ok := nextEmpty(next, mov)
 			if !ok {
 				continue
 			}
 
-			boxes[empty] = true
-			delete(boxes, next)
+			grid[empty] = box
+			delete(grid, next)
 		}
 
-		robot = next
+		delete(grid, robotPos)
+		robotPos = next
+		grid[robotPos] = robot
 	}
 
-	for box := range boxes {
-		res += box[0]*100 + box[1]
+	for pos, cell := range grid {
+		if cell == 'O' {
+			res += pos[0]*100 + pos[1]
+		}
 	}
 
 	// for i := range gridSize[0] + 1 {
 	// 	for j := range gridSize[1] + 1 {
 	// 		pos := [2]int{i, j}
-	// 		if walls[pos] {
-	// 			fmt.Printf("#")
-	// 		} else if boxes[pos] {
-	// 			fmt.Printf("O")
-	// 		} else if pos == robot {
-	// 			fmt.Printf("@")
+	// 		if cell, ok := grid[pos]; ok {
+	// 			fmt.Printf("%+v", string(cell))
 	// 		} else {
 	// 			fmt.Printf(" ")
 	// 		}
