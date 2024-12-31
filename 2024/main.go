@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	"github.com/eigu47/aoc2023/days/day15"
+	"github.com/eigu47/aoc2023/days/day17"
 )
 
 func main() {
@@ -36,5 +36,7 @@ func main() {
 	// fmt.Printf("Day14: %v\n", day14.Part1())
 	// fmt.Printf("Day14: %v\n", day14.Part2())
 	// fmt.Printf("Day15: %v\n", day15.Part1())
-	fmt.Printf("Day15: %v\n", day15.Part2())
+	// fmt.Printf("Day15: %v\n", day15.Part2())
+	fmt.Printf("Day16: %v\n", day17.Part1())
+	// fmt.Printf("Day16: %v\n", day16.Part2())
 }
