@@ -40,11 +40,7 @@ func init() {
 }
 
 func run(pos, dir [2]int, point int, path map[[2]int]bool, points map[[2]int]int) {
-	if grid[pos] == wall || path[pos] {
-		return
-	}
-
-	if prev, ok := points[pos]; ok && point >= prev {
+	if prev, ok := points[pos]; grid[pos] == wall || path[pos] || ok && point >= prev {
 		return
 	}
 
@@ -68,7 +64,6 @@ func run(pos, dir [2]int, point int, path map[[2]int]bool, points map[[2]int]int
 	}
 
 	path[pos] = false
-	return
 }
 
 func Part1() int {
@@ -76,4 +71,31 @@ func Part1() int {
 	run(reindeer, util.Directions[1], 0, map[[2]int]bool{}, points)
 
 	return points[goal]
+}
+
+func getPaths(pos [2]int, prevP int, points map[[2]int]int, paths map[[2]int]bool) {
+	point, ok := points[pos]
+	if grid[pos] == wall || paths[pos] || ok && point >= prevP {
+		return
+	}
+
+	paths[pos] = true
+
+	if grid[pos] == start {
+		return
+	}
+
+	for _, dir := range util.Directions {
+		getPaths([2]int{pos[0] + dir[0], pos[1] + dir[1]}, point, points, paths)
+	}
+}
+
+func Part2() int {
+	points := map[[2]int]int{}
+	run(reindeer, util.Directions[1], 0, map[[2]int]bool{}, points)
+
+	paths := map[[2]int]bool{}
+	getPaths(goal, points[goal]+1, points, paths)
+
+	return len(paths)
 }
