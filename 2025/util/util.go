@@ -13,10 +13,10 @@ import (
 	"github.com/joho/godotenv"
 )
 
-func GetInput(year, day int) []string {
+func GetInput(year, day int) ([]string, error) {
 	data, err := getData(year, day)
 	if err != nil {
-		log.Fatal(err)
+		return nil, err
 	}
 	defer data.Close()
 
@@ -27,15 +27,15 @@ func GetInput(year, day int) []string {
 	}
 
 	if err := sc.Err(); err != nil {
-		log.Fatal(err)
+		return nil, err
 	}
 
-	return input
+	return input, nil
 }
 
 func getData(year, day int) (io.ReadCloser, error) {
 	dir := "input"
-	filePath := fmt.Sprintf("%s/%d_%d.txt", dir, year, day)
+	filePath := fmt.Sprintf("%s/%d_%02d.txt", dir, year, day)
 
 	file, err := os.Open(filePath)
 	if err == nil {
