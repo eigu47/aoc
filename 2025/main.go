@@ -18,6 +18,11 @@ func main() {
 		Run  func([]string) string
 	}{
 		{
+			Day:  2,
+			Part: 1,
+			Run:  days.Day02_1,
+		},
+		{
 			Day:  1,
 			Part: 2,
 			Run:  days.Day01_2,

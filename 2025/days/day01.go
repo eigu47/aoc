@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-var test = strings.Split(`L68
+var test_01 = strings.Split(`L68
 L30
 R48
 L5
