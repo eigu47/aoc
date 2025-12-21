@@ -17,11 +17,11 @@ func main() {
 		Part int
 		Run  func([]string) string
 	}{
-		// {
-		// 	Day:  1,
-		// 	Part: 2,
-		// 	Run:  days.Day01_2,
-		// },
+		{
+			Day:  1,
+			Part: 2,
+			Run:  days.Day01_2,
+		},
 		{
 			Day:  1,
 			Part: 1,
@@ -58,5 +58,5 @@ func main() {
 	start := time.Now()
 	answer := days[idx].Run(input)
 
-	fmt.Printf("Time %v:\n\n%v", time.Since(start), answer)
+	fmt.Printf("Time %v:\n%v", time.Since(start), answer)
 }
