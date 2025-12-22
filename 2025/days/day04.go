@@ -2,6 +2,7 @@ package days
 
 import (
 	"fmt"
+	"maps"
 	"strings"
 )
 
@@ -49,6 +50,70 @@ func Day04_1(input []string) string {
 			ans++
 		}
 	}
+
+	return fmt.Sprint(ans)
+}
+
+func Day04_2(input []string) string {
+	ans := 0
+	grid := make(map[[2]int]bool)
+
+	for i, row := range input {
+		for j, cell := range row {
+			pos := [2]int{i, j}
+
+			if cell == '@' {
+				grid[pos] = true
+			}
+		}
+	}
+
+	var removeRoll func(grid map[[2]int]bool, removed int) int
+	removeRoll = func(grid map[[2]int]bool, removed int) int {
+		removedHere := false
+		cloneGrid := maps.Clone(grid)
+
+		for pos := range grid {
+			rolls := 0
+
+			for _, dir := range adjacent {
+				curr := [2]int{pos[0] + dir[0], pos[1] + dir[1]}
+
+				if grid[curr] {
+					rolls++
+					if rolls >= 4 {
+						break
+					}
+				}
+			}
+
+			if rolls < 4 {
+				delete(cloneGrid, pos)
+				removed++
+				removedHere = true
+			}
+		}
+
+		if removedHere {
+			return removeRoll(cloneGrid, removed)
+		}
+
+		return removed
+	}
+
+	ans = removeRoll(grid, 0)
+
+	// for i := range len(test_04) {
+	// 	for j := range len(test_04[0]) {
+	// 		pos := [2]int{i, j}
+	// 		if removed[pos] {
+	// 			fmt.Print("@")
+	// 		} else {
+	// 			fmt.Print(".")
+	// 		}
+	// 	}
+	// 	fmt.Println()
+	// }
 
 	return fmt.Sprint(ans)
 }
