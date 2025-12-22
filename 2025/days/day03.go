@@ -5,7 +5,7 @@ import (
 	"strings"
 )
 
-func Day03_01(input []string) string {
+func Day03_1(input []string) string {
 	ans := 0
 
 	for _, banks := range input {
@@ -33,7 +33,7 @@ func Day03_01(input []string) string {
 	return fmt.Sprint(ans)
 }
 
-func Day03_02(input []string) string {
+func Day03_2(input []string) string {
 	ans := 0
 	var _joltage [12]int
 	for i := range _joltage {
