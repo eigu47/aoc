@@ -15,8 +15,13 @@ func main() {
 	days := []struct {
 		Day  int
 		Part int
-		Run  func([]string) string
+		Run  func([]string) int
 	}{
+		{
+			Day:  5,
+			Part: 1,
+			Run:  days.Day05_1,
+		},
 		{
 			Day:  4,
 			Part: 2,

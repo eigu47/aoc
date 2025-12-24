@@ -1,12 +1,11 @@
 package days
 
 import (
-	"fmt"
 	"maps"
 	"strings"
 )
 
-func Day04_1(input []string) string {
+func Day04_1(input []string) int {
 	ans := 0
 	grid := make(map[[2]int]bool)
 
@@ -51,10 +50,10 @@ func Day04_1(input []string) string {
 		}
 	}
 
-	return fmt.Sprint(ans)
+	return ans
 }
 
-func Day04_2(input []string) string {
+func Day04_2(input []string) int {
 	ans := 0
 	grid := make(map[[2]int]bool)
 
@@ -115,7 +114,7 @@ func Day04_2(input []string) string {
 	// 	fmt.Println()
 	// }
 
-	return fmt.Sprint(ans)
+	return ans
 }
 
 var test_04 = strings.Split(`..@@.@@@@.

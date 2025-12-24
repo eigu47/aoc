@@ -1,11 +1,10 @@
 package days
 
 import (
-	"fmt"
 	"strings"
 )
 
-func Day03_1(input []string) string {
+func Day03_1(input []string) int {
 	ans := 0
 
 	for _, banks := range input {
@@ -30,10 +29,10 @@ func Day03_1(input []string) string {
 		ans += int(banks[first]-'0')*10 + int(banks[last]-'0')
 	}
 
-	return fmt.Sprint(ans)
+	return ans
 }
 
-func Day03_2(input []string) string {
+func Day03_2(input []string) int {
 	ans := 0
 	var _joltage [12]int
 	for i := range _joltage {
@@ -67,7 +66,7 @@ func Day03_2(input []string) string {
 		// fmt.Printf("maxJ %+v\n", maxJ)
 	}
 
-	return fmt.Sprint(ans)
+	return ans
 }
 
 var test_03 = strings.Split(`987654321111111

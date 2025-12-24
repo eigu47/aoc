@@ -1,12 +1,11 @@
 package days
 
 import (
-	"fmt"
 	"strconv"
 	"strings"
 )
 
-func Day02_1(input []string) string {
+func Day02_1(input []string) int {
 	ans := 0
 
 	for _, idRanges := range strings.Split(input[0], ",") {
@@ -27,10 +26,10 @@ func Day02_1(input []string) string {
 		}
 	}
 
-	return fmt.Sprint(ans)
+	return ans
 }
 
-func Day02_2(input []string) string {
+func Day02_2(input []string) int {
 	ans := 0
 
 	for _, idRanges := range strings.Split(input[0], ",") {
@@ -63,7 +62,7 @@ func Day02_2(input []string) string {
 		}
 	}
 
-	return fmt.Sprint(ans)
+	return ans
 }
 
 func getDivisors(n int) []int {

@@ -1,7 +1,6 @@
 package days
 
 import (
-	"fmt"
 	"regexp"
 	"strconv"
 	"strings"
@@ -26,7 +25,7 @@ func abs(a int) int {
 	return max(a, -a)
 }
 
-func Day01_1(input []string) string {
+func Day01_1(input []string) int {
 	dial := 50
 	ans := 0
 
@@ -50,10 +49,10 @@ func Day01_1(input []string) string {
 		}
 	}
 
-	return fmt.Sprintf("%v", ans)
+	return ans
 }
 
-func Day01_2(input []string) string {
+func Day01_2(input []string) int {
 	dial := 50
 	ans := 0
 
@@ -101,10 +100,9 @@ func Day01_2(input []string) string {
 		}
 		dial = mod(dial, 100)
 
-
 		// Time 2.2069ms:
 		// fmt.Printf("dial %+v, ans %+v", dial, ans)
 	}
 
-	return fmt.Sprintf("%v", ans)
+	return ans
 }
