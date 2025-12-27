@@ -1,13 +1,15 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"log"
+	"strings"
 	"time"
 
 	"github.com/eigu47/aoc2025/days"
 	"github.com/eigu47/aoc2025/util"
-	// "github.com/manifoldco/promptui"
+	"github.com/manifoldco/promptui"
 )
 
 func main() {
@@ -16,6 +18,11 @@ func main() {
 		Part int
 		Run  func([]string) int
 	}{
+		{
+			Day:  6,
+			Part: 2,
+			Run:  days.Day06_2,
+		},
 		{
 			Day:  6,
 			Part: 1,
@@ -73,28 +80,34 @@ func main() {
 		},
 	}
 
-	// items := make([]string, len(days))
-	// for i, d := range days {
-	// 	items[i] = fmt.Sprintf("Day %02d, Part %d", d.Day, d.Part)
-	// }
-
-	// prompt := promptui.Select{
-	// 	Label: "Select day",
-	// 	Items: items,
-	// 	Searcher: func(input string, index int) bool {
-	// 		return strings.Contains(
-	// 			strings.ToLower(items[index]),
-	// 			strings.ToLower(input),
-	// 		)
-	// 	},
-	// }
-
-	// idx, _, err := prompt.Run()
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
-
+	all := flag.Bool("all", false, "ask all days")
+	flag.Parse()
 	idx := 0
+
+	if *all {
+		items := make([]string, len(days))
+		for i, d := range days {
+			items[i] = fmt.Sprintf("Day %02d, Part %d", d.Day, d.Part)
+		}
+
+		prompt := promptui.Select{
+			Label: "Select day",
+			Items: items,
+			Searcher: func(input string, index int) bool {
+				return strings.Contains(
+					strings.ToLower(items[index]),
+					strings.ToLower(input),
+				)
+			},
+		}
+
+		var err error
+		idx, _, err = prompt.Run()
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
+
 	input, err := util.GetInput(2025, days[idx].Day)
 	if err != nil {
 		log.Fatal(err)
