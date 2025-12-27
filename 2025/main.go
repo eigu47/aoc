@@ -20,6 +20,11 @@ func main() {
 	}{
 		{
 			Day:  7,
+			Part: 2,
+			Run:  days.Day07_2,
+		},
+		{
+			Day:  7,
 			Part: 1,
 			Run:  days.Day07_1,
 		},

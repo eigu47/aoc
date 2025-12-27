@@ -43,6 +43,38 @@ func Day07_1(input []string) int {
 	return ans
 }
 
+func Day07_2(input []string) int {
+	// input = test_07
+	ans := 0
+
+	memo := make(map[[2]int]int)
+
+	var traverse func(pos [2]int) int
+	traverse = func(pos [2]int) int {
+		if pos[0] >= len(input) {
+			return 1
+		}
+
+		if v, ok := memo[pos]; ok {
+			return v
+		}
+
+		res := 0
+		if input[pos[0]][pos[1]] == '^' {
+			res = traverse(addPos(pos, dirs["dwnLft"])) + traverse(addPos(pos, dirs["dwnRgt"]))
+		} else {
+			res = traverse(addPos(pos, dirs["dwn"]))
+		}
+
+		memo[pos] = res
+		return res
+	}
+
+	ans = traverse([2]int{0, strings.Index(input[0], "S")})
+
+	return ans
+}
+
 var test_07 = strings.Split(`.......S.......
 ...............
 .......^.......
