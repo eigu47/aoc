@@ -3,12 +3,11 @@ package main
 import (
 	"fmt"
 	"log"
-	"strings"
 	"time"
 
 	"github.com/eigu47/aoc2025/days"
 	"github.com/eigu47/aoc2025/util"
-	"github.com/manifoldco/promptui"
+	// "github.com/manifoldco/promptui"
 )
 
 func main() {
@@ -17,6 +16,11 @@ func main() {
 		Part int
 		Run  func([]string) int
 	}{
+		{
+			Day:  5,
+			Part: 2,
+			Run:  days.Day05_2,
+		},
 		{
 			Day:  5,
 			Part: 1,
@@ -64,27 +68,28 @@ func main() {
 		},
 	}
 
-	items := make([]string, len(days))
-	for i, d := range days {
-		items[i] = fmt.Sprintf("Day %02d, Part %d", d.Day, d.Part)
-	}
+	// items := make([]string, len(days))
+	// for i, d := range days {
+	// 	items[i] = fmt.Sprintf("Day %02d, Part %d", d.Day, d.Part)
+	// }
 
-	prompt := promptui.Select{
-		Label: "Select day",
-		Items: items,
-		Searcher: func(input string, index int) bool {
-			return strings.Contains(
-				strings.ToLower(items[index]),
-				strings.ToLower(input),
-			)
-		},
-	}
+	// prompt := promptui.Select{
+	// 	Label: "Select day",
+	// 	Items: items,
+	// 	Searcher: func(input string, index int) bool {
+	// 		return strings.Contains(
+	// 			strings.ToLower(items[index]),
+	// 			strings.ToLower(input),
+	// 		)
+	// 	},
+	// }
 
-	idx, _, err := prompt.Run()
-	if err != nil {
-		log.Fatal(err)
-	}
+	// idx, _, err := prompt.Run()
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
 
+	idx := 0
 	input, err := util.GetInput(2025, days[idx].Day)
 	if err != nil {
 		log.Fatal(err)
