@@ -15,6 +15,7 @@ func Day08_1(input []string) int {
 	type box struct {
 		pos    [3]int
 		parent *box
+		size   int
 	}
 
 	boxes := []*box{}
@@ -25,7 +26,8 @@ func Day08_1(input []string) int {
 		z, _ := strconv.Atoi(pos[2])
 
 		b := &box{
-			pos: [3]int{x, y, z},
+			pos:  [3]int{x, y, z},
+			size: 1,
 		}
 		b.parent = b
 		boxes = append(boxes, b)
@@ -59,7 +61,15 @@ func Day08_1(input []string) int {
 	}
 
 	union := func(a, b *box) {
-		find(a).parent = find(b)
+		rootA := find(a)
+		rootB := find(b)
+		if rootA == rootB {
+			return
+		}
+
+		rootA.parent = rootB
+		rootB.size += rootA.size
+		rootA.size = 0
 	}
 
 	for i := 0; i < 1000; i++ {
@@ -67,22 +77,12 @@ func Day08_1(input []string) int {
 		union(pair[0], pair[1])
 	}
 
-	circuits := map[*box]int{}
-	for _, b := range boxes {
-		circuits[find(b)]++
-	}
-
-	connections := make([]int, len(circuits))
-	for _, val := range circuits {
-		connections = append(connections, val)
-	}
-
-	slices.SortFunc(connections, func(a, b int) int {
-		return cmp.Compare(b, a)
+	slices.SortFunc(boxes, func(a, b *box) int {
+		return cmp.Compare(b.size, a.size)
 	})
 
 	for i := 0; i < 3; i++ {
-		ans *= connections[i]
+		ans *= boxes[i].size
 	}
 
 	return ans
