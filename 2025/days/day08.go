@@ -12,20 +12,14 @@ func Day08_1(input []string) int {
 	// input = test_08
 	ans := 1
 
-	type box struct {
-		pos    [3]int
-		parent *box
-		size   int
-	}
-
-	boxes := []*box{}
+	boxes := []*d8_box{}
 	for _, position := range input {
 		pos := strings.Split(position, ",")
 		x, _ := strconv.Atoi(pos[0])
 		y, _ := strconv.Atoi(pos[1])
 		z, _ := strconv.Atoi(pos[2])
 
-		b := &box{
+		b := &d8_box{
 			pos:  [3]int{x, y, z},
 			size: 1,
 		}
@@ -33,51 +27,26 @@ func Day08_1(input []string) int {
 		boxes = append(boxes, b)
 	}
 
-	type pairDist struct {
-		pair [2]*box
-		dist float64
-	}
-
-	pairs := []pairDist{}
+	pairs := []d8_pairDist{}
 	for i, b1 := range boxes {
 		for _, b2 := range boxes[i+1:] {
-			pairs = append(pairs, pairDist{
-				pair: [2]*box{b1, b2},
+			pairs = append(pairs, d8_pairDist{
+				pair: [2]*d8_box{b1, b2},
 				dist: getDistanceVector(b1.pos, b2.pos),
 			})
 		}
 	}
 
-	slices.SortFunc(pairs, func(a, b pairDist) int {
+	slices.SortFunc(pairs, func(a, b d8_pairDist) int {
 		return cmp.Compare(a.dist, b.dist)
 	})
 
-	var find func(*box) *box
-	find = func(b *box) *box {
-		if b.parent != b {
-			b.parent = find(b.parent)
-		}
-		return b.parent
-	}
-
-	union := func(a, b *box) {
-		rootA := find(a)
-		rootB := find(b)
-		if rootA == rootB {
-			return
-		}
-
-		rootA.parent = rootB
-		rootB.size += rootA.size
-		rootA.size = 0
-	}
-
 	for i := 0; i < 1000; i++ {
 		pair := pairs[i].pair
-		union(pair[0], pair[1])
+		d8_union(pair[0], pair[1])
 	}
 
-	slices.SortFunc(boxes, func(a, b *box) int {
+	slices.SortFunc(boxes, func(a, b *d8_box) int {
 		return cmp.Compare(b.size, a.size)
 	})
 
@@ -89,8 +58,54 @@ func Day08_1(input []string) int {
 }
 
 func Day08_2(input []string) int {
-	input = test_08
+	// input = test_08
 	ans := 0
+
+	boxes := []*d8_box{}
+	for _, position := range input {
+		pos := strings.Split(position, ",")
+		x, _ := strconv.Atoi(pos[0])
+		y, _ := strconv.Atoi(pos[1])
+		z, _ := strconv.Atoi(pos[2])
+
+		b := &d8_box{
+			pos:  [3]int{x, y, z},
+			size: 1,
+		}
+		b.parent = b
+		boxes = append(boxes, b)
+	}
+
+	pairs := []d8_pairDist{}
+	for i, b1 := range boxes {
+		for _, b2 := range boxes[i+1:] {
+			pairs = append(pairs, d8_pairDist{
+				pair: [2]*d8_box{b1, b2},
+				dist: getDistanceVector(b1.pos, b2.pos),
+			})
+		}
+	}
+
+	slices.SortFunc(pairs, func(a, b d8_pairDist) int {
+		return cmp.Compare(a.dist, b.dist)
+	})
+
+	for _, p := range pairs {
+		d8_union(p.pair[0], p.pair[1])
+
+		lastCon := slices.ContainsFunc(boxes, func(b *d8_box) bool {
+			return b.size == len(boxes)
+		})
+
+		if lastCon {
+			ans = p.pair[0].pos[0] * p.pair[1].pos[0]
+			break
+		}
+	}
+
+	// for _, b := range boxes {
+	// 	fmt.Printf("pos %+v, size %v\n", b.pos, b.size)
+	// }
 
 	return ans
 }
@@ -123,28 +138,32 @@ func getDistanceVector(a, b [3]int) float64 {
 	return math.Sqrt(dx*dx + dy*dy + dz*dz)
 }
 
-type unionFind struct {
-	parent []int
+type d8_box struct {
+	pos    [3]int
+	parent *d8_box
+	size   int
 }
 
-func newUnionFind(len int) *unionFind {
-	parent := make([]int, len)
-	for i := range len {
-		parent[i] = i
+type d8_pairDist struct {
+	pair [2]*d8_box
+	dist float64
+}
+
+func d8_find(b *d8_box) *d8_box {
+	if b.parent != b {
+		b.parent = d8_find(b.parent)
 	}
-	return &unionFind{parent: parent}
+	return b.parent
 }
 
-func (u *unionFind) find(i int) int {
-	if u.parent[i] != i {
-		u.parent[i] = u.find(u.parent[i])
+func d8_union(a, b *d8_box) {
+	rootA := d8_find(a)
+	rootB := d8_find(b)
+	if rootA == rootB {
+		return
 	}
 
-	return u.parent[i]
-}
-
-func (u *unionFind) union(a, b int) {
-	rootA := u.find(a)
-	rootB := u.find(b)
-	u.parent[rootA] = rootB
+	rootA.parent = rootB
+	rootB.size += rootA.size
+	rootA.size = 0
 }
