@@ -30,7 +30,7 @@ func Day09_1(input []string) int {
 		for _, t2 := range tiles[i+1:] {
 			pairs = append(pairs, &pairArea{
 				pair: [2][2]int{t1, t2},
-				area: abs((t1[0] - t2[0] + 1) * (t1[1] - t2[1] + 1)),
+				area: (abs(t1[0]-t2[0]) + 1) * (abs(t1[1]-t2[1]) + 1),
 			})
 		}
 	}
@@ -58,21 +58,8 @@ func Day09_2(input []string) int {
 		tiles = append(tiles, [2]int{x, y})
 	}
 
-	type pairArea struct {
-		pair [2][2]int
-		area int
-	}
-
-	pairs := []*pairArea{}
-	for i, t1 := range tiles {
-		for _, t2 := range tiles[i+1:] {
-			pairs = append(pairs, &pairArea{
-				pair: [2][2]int{t1, t2},
-				area: abs((t1[0] - t2[0] + 1) * (t1[1] - t2[1] + 1)),
-			})
-		}
-	}
-
+	// coordinates compression:
+	// get all unique coordinates
 	uniqueX := map[int]struct{}{}
 	uniqueY := map[int]struct{}{}
 	for _, tile := range tiles {
@@ -80,6 +67,7 @@ func Day09_2(input []string) int {
 		uniqueY[tile[1]] = struct{}{}
 	}
 
+	// sort the unique coordinates, map the index of compressed values to the original value
 	createCompMap := func(unique map[int]struct{}) ([]int, map[int]int) {
 		comp := make([]int, 0, len(unique))
 		for i := range unique {
@@ -98,11 +86,11 @@ func Day09_2(input []string) int {
 	xComp, xMap := createCompMap(uniqueX)
 	yComp, yMap := createCompMap(uniqueY)
 
+	// grid of the compressed coordinates
 	grid := make([][]bool, len(yComp))
 	for i := range grid {
 		grid[i] = make([]bool, len(xComp))
 	}
-
 	for i, tile := range tiles {
 		x := xMap[tile[0]]
 		y := yMap[tile[1]]
@@ -123,6 +111,7 @@ func Day09_2(input []string) int {
 		}
 	}
 
+	// get any point inside the polygon raycasting
 	inside := [2]int{}
 found:
 	for y, row := range grid {
@@ -141,13 +130,13 @@ found:
 			}
 
 			if cross%2 == 1 {
-
 				inside = [2]int{y, x}
 				break found
 			}
 		}
 	}
 
+	// fill all the inside polygon
 	grid[inside[0]][inside[1]] = true
 	queue := [][2]int{inside}
 	for len(queue) > 0 {
@@ -179,32 +168,44 @@ found:
 	// fmt.Printf("xComp %v, xMap %+v\n", xComp, xMap)
 	// fmt.Printf("yComp %v, yMap %+v\n", yComp, yMap)
 
+	type pairArea struct {
+		pair [2][2]int
+		area int
+	}
+
+	// get all combinations of points, calculate each area and sort it desc
+	pairs := []*pairArea{}
+	for i, t1 := range tiles {
+		for _, t2 := range tiles[i+1:] {
+			pairs = append(pairs, &pairArea{
+				pair: [2][2]int{t1, t2},
+				area: (abs(t1[0]-t2[0]) + 1) * (abs(t1[1]-t2[1]) + 1),
+			})
+		}
+	}
+
 	slices.SortFunc(pairs, func(a, b *pairArea) int {
 		return cmp.Compare(b.area, a.area)
 	})
 
+	// get the first pair with all sides inside'
+checkPair:
 	for _, p := range pairs {
 		x1, y1 := xMap[p.pair[0][0]], yMap[p.pair[0][1]]
 		x2, y2 := xMap[p.pair[1][0]], yMap[p.pair[1][1]]
 
-		valid := true
 		for y := min(y1, y2); y <= max(y1, y2); y++ {
-			for x := min(x1, x2); x <= max(x1, x2); x++ {
-				if !grid[y][x] {
-					valid = false
-					break
-				}
+			if !grid[y][x1] || !grid[y][x2] {
+				continue checkPair
 			}
-			if !valid {
-				break
+		}
+		for x := min(x1, x2); x <= max(x1, x2); x++ {
+			if !grid[y1][x] || !grid[y2][x] {
+				continue checkPair
 			}
 		}
 
-		if valid {
-			width := abs(p.pair[0][0]-p.pair[1][0]) + 1
-			height := abs(p.pair[0][1]-p.pair[1][1]) + 1
-			return width * height
-		}
+		return p.area
 	}
 
 	return ans
