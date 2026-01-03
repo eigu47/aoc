@@ -1,14 +1,13 @@
 import sys
-import time
 
 from days import day01
-from utils import get_day_part, get_input, get_sample
+from utils import get_day_part, get_input, get_sample, run_day
 
 YEAR = 2022
 
 
 def main():
-    days = [day01.day_01_1]
+    days = [day01.day_01_1, day01.day_01_2]
 
     if len(sys.argv) > 2:
         day = int(sys.argv[1])
@@ -27,14 +26,9 @@ def main():
     sample = get_sample(YEAR, day)
 
     print(f"Day {day}, part {part}:")
-    if len(sample) > 1:
-        start = time.perf_counter()
-        ans = selected_day(sample)
-        print(f"Sample time {(time.perf_counter() - start)*1000:.3f}ms:\n{ans}\n")
-
-    start = time.perf_counter()
-    ans = selected_day(input)
-    print(f"Input time {(time.perf_counter() - start)*1000:.3f}ms:\n{ans}")
+    run_day(selected_day, sample, "Sample")
+    print("")
+    run_day(selected_day, input, "Input")
 
 
 if __name__ == "__main__":
