@@ -1,13 +1,13 @@
 import sys
 
-from days import day01
+from days import day01, day02
 from utils import get_day_part, get_input, get_sample, run_day
 
 YEAR = 2022
 
 
 def main():
-    days = [day01.day_01_1, day01.day_01_2]
+    days = [day01.day_01_1, day01.day_01_2, day02.day_02_1, day02.day_02_2]
 
     if len(sys.argv) > 2:
         day = int(sys.argv[1])
