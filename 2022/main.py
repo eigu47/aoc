@@ -1,6 +1,6 @@
 import sys
 
-from days import day01, day02, day03, day04, day05
+from days import day01, day02, day03, day04, day05, day06
 from utils import get_day_part, get_input, get_sample, run_day
 
 YEAR = 2022
@@ -8,6 +8,8 @@ YEAR = 2022
 
 def main():
     days = [
+        # day06.day_06_2,
+        day06.day_06_1,
         day05.day_05_2,
         day05.day_05_1,
         day04.day_04_2,

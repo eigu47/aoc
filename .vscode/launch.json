@@ -5,6 +5,14 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "Python 2022",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/2022/main.py",
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}/2022"
+    },
+    {
       "name": "Go 2025",
       "type": "go",
       "request": "launch",
