@@ -8,7 +8,7 @@ YEAR = 2022
 
 def main():
     days = [
-        # day09.day_09_2,
+        day09.day_09_2,
         day09.day_09_1,
         day08.day_08_2,
         day08.day_08_1,
