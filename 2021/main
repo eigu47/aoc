@@ -53,7 +53,11 @@ day_file="days/day${day_padded}_$part"
 		"https://adventofcode.com/$year/day/$day/input"
 }
 
-[[ -s $day_file ]] || fatal "file not found: ${day_file##*/}"
+[[ -s $day_file ]] || {
+	cp days/day00 "$day_file"
+	fatal "file not found: ${day_file##*/}"
+}
+
 [[ -x $day_file ]] || chmod +x "$day_file"
 
 if [[ -n $test_mode ]]; then

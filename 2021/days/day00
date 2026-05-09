@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+mapfile -t input
+
+res=0
+
+echo "$res"

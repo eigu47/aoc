@@ -3,7 +3,7 @@
 mapfile -t input
 
 res=0
-for i in "${!input[@]}"; do
+for ((i = 1; i < ${#input[@]}; i++)); do
 	((input[i] > input[i - 1])) && ((res++))
 done
 
