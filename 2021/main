@@ -1,0 +1,79 @@
+#!/usr/bin/env bash
+set -e
+
+fatal() {
+	echo '[FATAL]:' "$@" >&2
+	exit 1
+}
+
+usage() {
+	cat <<-EOF
+		Usage: ${0##*/} <day> [part]
+
+		Options:
+		  -t Use test input 
+			-x Debug mode
+	EOF
+
+	exit 0
+}
+
+while getopts "htx" opt; do
+	case "$opt" in
+	h) usage ;;
+	t) test_mode=true ;;
+	x) debug_mode=true ;;
+	\?) fatal "invalid argument -$opt" ;;
+	esac
+done
+shift $((OPTIND - 1))
+
+(($# >= 1)) || usage
+
+day="$1"
+part="${2:-1}"
+
+cd -- "$(dirname -- "${BASH_SOURCE[0]}")"
+year=${PWD##*/}
+
+printf -v day_padded '%02d' "$day"
+input_file="input/input$day_padded"
+day_file="days/day${day_padded}_$part"
+
+[[ -s $input_file ]] || {
+	[[ -s .env ]] || fatal ".env file not found"
+
+	# shellcheck disable=SC1091
+	source .env
+
+	echo "downloading input for day $day..."
+	curl -fsS \
+		-b "session=${SESSION_ID}" \
+		-o "$input_file" \
+		"https://adventofcode.com/$year/day/$day/input"
+}
+
+[[ -s $day_file ]] || fatal "file not found: ${day_file##*/}"
+[[ -x $day_file ]] || chmod +x "$day_file"
+
+if [[ -n $test_mode ]]; then
+	input=$(
+		curl -fsS \
+			"https://adventofcode.com/$year/day/$day" |
+			sed -nE '/<\/code>/q
+			/<code>/,/<\/code>/{
+			s#</?(code|pre)>##g
+			p
+    }'
+	)
+else
+	input=$(cat "$input_file")
+fi
+
+if [[ -n $debug_mode ]]; then
+	runner=(bash -x "$day_file")
+else
+	runner=("$day_file")
+fi
+
+"${runner[@]}" <<<"${input[@]}"
