@@ -64,11 +64,12 @@ if [[ -n $test_mode ]]; then
 	input=$(
 		curl -fsS \
 			"https://adventofcode.com/$year/day/$day" |
-			sed -nE '/<\/code>/q
-			/<code>/,/<\/code>/{
-			s#</?(code|pre)>##g
-			p
-    }'
+			sed -nE '
+			/<\/code><\/pre>/q
+			/<pre><code>/,/<\/code><\/code><\/pre>/{
+				s/<\/?(code|pre)>//g
+				p
+			}'
 	)
 else
 	input=$(cat "$input_file")
