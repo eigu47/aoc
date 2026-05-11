@@ -2,7 +2,7 @@
 set -e
 
 fatal() {
-	echo '[FATAL]:' "$@" >&2
+	echo '[FATAL]:' "$*" >&2
 	exit 1
 }
 
@@ -12,18 +12,24 @@ usage() {
 
 		Options:
 		  -t Use test input 
-			-x Debug mode
+		  -x Debug mode
+		  -w Watch mode
 	EOF
 
 	exit 0
 }
 
-while getopts "htx" opt; do
+test_mode=
+debug_mode=
+watch_mode=
+
+while getopts "htxw" opt; do
 	case "$opt" in
 	h) usage ;;
 	t) test_mode=true ;;
 	x) debug_mode=true ;;
-	\?) fatal "invalid argument -$opt" ;;
+	w) watch_mode=true ;;
+	\?) fatal "invalid argument: -$OPTARG" ;;
 	esac
 done
 shift $((OPTIND - 1))
@@ -40,6 +46,7 @@ printf -v day_padded '%02d' "$day"
 input_file="input/input$day_padded"
 day_file="days/day${day_padded}_$part"
 
+# download input if does not exist
 [[ -s $input_file ]] || {
 	[[ -s .env ]] || fatal ".env file not found"
 
@@ -48,37 +55,49 @@ day_file="days/day${day_padded}_$part"
 
 	echo "downloading input for day $day..."
 	curl -fsS \
-		-b "session=${SESSION_ID}" \
+		-b "session=$SESSION_ID" \
 		-o "$input_file" \
 		"https://adventofcode.com/$year/day/$day/input"
 }
 
+# check day file
 [[ -s $day_file ]] || {
 	cp days/day00 "$day_file"
 	fatal "file not found: ${day_file##*/}"
 }
 
+# ensure its executable
 [[ -x $day_file ]] || chmod +x "$day_file"
 
-if [[ -n $test_mode ]]; then
+# load input, test mode scrapes the sample input
+input=$(<"$input_file")
+[[ -n $test_mode ]] && {
+	input=$(curl -fsS "https://adventofcode.com/$year/day/$day")
 	input=$(
-		curl -fsS \
-			"https://adventofcode.com/$year/day/$day" |
-			sed -nE '
-			/<\/code><\/pre>/q
-			/<pre><code>/,/<\/code><\/code><\/pre>/{
-				s/<\/?(code|pre)>//g
-				p
-			}'
+		sed -nE '
+		/<\/code><\/pre>/q
+		/<pre><code>/,/<\/code><\/code><\/pre>/{
+			s/<\/?(code|pre)>//g
+			p
+		}' <<<"$input"
 	)
-else
-	input=$(cat "$input_file")
-fi
 
-if [[ -n $debug_mode ]]; then
-	runner=(bash -x "$day_file")
-else
-	runner=("$day_file")
-fi
+	[[ -n $input ]] || fatal 'test input not found'
+}
 
-"${runner[@]}" <<<"${input[@]}"
+# debug mode adds -x
+runner=("$day_file")
+[[ -n $debug_mode ]] && runner=(bash -x "$day_file")
+
+"${runner[@]}" <<<"$input"
+
+# watch mode keeps running every change
+[[ -n $watch_mode ]] && {
+	command -v inotifywait 2 &>/dev/null || fatal 'inotifywait command not found'
+
+	while inotifywait -q -e modify "$day_file"; do
+		sleep 0.05
+		echo 'file changed'
+		"${runner[@]}" <<<"$input"
+	done
+}
