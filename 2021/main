@@ -43,9 +43,13 @@ year=${PWD##*/}
 (($# >= 1)) || {
 	command -v fzf &>/dev/null || usage
 
-	day=$(cd days && printf '%s\n' day* | fzf --tac | sed -E 's/day([0-9]+).*/\1/')
+	file=$(cd days && printf '%s\n' day* | grep -v 'day00$' | fzf --tac)
 
-	[[ -n $day ]] || usage
+	re='^day0?([0-9]+)_([0-9]+)$'
+	[[ $file =~ $re ]] || fatal "invalid file: $file"
+
+	day="${BASH_REMATCH[1]}"
+	part="${BASH_REMATCH[2]}"
 }
 
 printf -v day_padded '%02d' "$day"
@@ -95,6 +99,7 @@ input=$(<"$input_file")
 runner=("$day_file")
 [[ -n $debug_mode ]] && runner=(bash -x "$day_file")
 
+echo "running $day_file"
 "${runner[@]}" <<<"$input"
 
 # watch mode keeps running every change

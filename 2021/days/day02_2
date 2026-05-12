@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+hor=0
+dep=0
+aim=0
+while read -ra input; do
+	case "${input[0]}" in
+	forward)
+		((hor += input[1]))
+		((dep += aim * input[1]))
+		;;
+	up) ((aim -= input[1])) ;;
+	down) ((aim += input[1])) ;;
+	esac
+done
+
+echo $((hor * dep))
