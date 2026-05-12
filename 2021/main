@@ -34,13 +34,19 @@ while getopts "htxw" opt; do
 done
 shift $((OPTIND - 1))
 
-(($# >= 1)) || usage
-
 day="$1"
 part="${2:-1}"
-
 cd -- "$(dirname -- "${BASH_SOURCE[0]}")"
 year=${PWD##*/}
+
+# if no arguments, use fzf to select day
+(($# >= 1)) || {
+	command -v fzf &>/dev/null || usage
+
+	day=$(cd days && printf '%s\n' day* | fzf --tac | sed -E 's/day([0-9]+).*/\1/')
+
+	[[ -n $day ]] || usage
+}
 
 printf -v day_padded '%02d' "$day"
 input_file="input/input$day_padded"
@@ -93,7 +99,7 @@ runner=("$day_file")
 
 # watch mode keeps running every change
 [[ -n $watch_mode ]] && {
-	command -v inotifywait 2 &>/dev/null || fatal 'inotifywait command not found'
+	command -v inotifywait &>/dev/null || fatal 'inotifywait command not found'
 
 	while inotifywait -q -e modify "$day_file"; do
 		sleep 0.05
