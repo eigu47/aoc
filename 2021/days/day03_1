@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+
+res=0
+bits=()
+
+while read -r input; do
+	for ((i = 0; i < ${#input}; i++)); do
+		if ((${input:i:1} == 1)); then
+			((bits[i]++))
+		else
+			((bits[i]--))
+		fi
+	done
+done
+
+gamma=
+for bit in "${bits[@]}"; do
+	if ((bit > 0)); then
+		gamma+='1'
+	else
+		gamma+='0'
+	fi
+done
+# declare -p gamma
+
+echo $((2#$gamma * 2#$(echo "$gamma" | tr '10' '01')))
+
+# echo "$res"
