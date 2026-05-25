@@ -1,0 +1,61 @@
+#!/usr/bin/env bash
+
+mapfile -t input
+
+bits=("${input[@]}")
+
+for ((j = 0; j < "${#input[0]}" && "${#bits[@]}" > 1; j++)); do
+	bits1=()
+	bits0=()
+	for i in "${!input[@]}"; do
+		[[ -z ${bits[$i]} ]] && continue
+
+		if ((${input[i]:j:1} == 1)); then
+			bits1+=("$i")
+		else
+			bits0+=("$i")
+		fi
+	done
+
+	if (( ${#bits0[@]} > ${#bits1[@]} )); then
+		for row in "${bits1[@]}"; do
+			unset 'bits[row]'
+		done
+	else
+		for row in "${bits0[@]}"; do
+			unset 'bits[row]'
+		done
+	fi
+done
+
+rating1="${bits[*]}"
+
+bits=("${input[@]}")
+
+for ((j = 0; j < "${#input[0]}" && "${#bits[@]}" > 1; j++)); do
+	bits1=()
+	bits0=()
+	for i in "${!input[@]}"; do
+		[[ -z ${bits[$i]} ]] && continue
+
+		if ((${input[i]:j:1} == 1)); then
+			bits1+=("$i")
+		else
+			bits0+=("$i")
+		fi
+	done
+
+	if (( ${#bits0[@]} > ${#bits1[@]} )); then
+		for row in "${bits0[@]}"; do
+			unset 'bits[row]'
+		done
+	else
+		for row in "${bits1[@]}"; do
+			unset 'bits[row]'
+		done
+	fi
+done
+
+rating0="${bits[*]}"
+
+echo $((2#$rating1 * 2#$rating0))
