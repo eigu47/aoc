@@ -71,7 +71,7 @@ if [[ -n $test_mode ]]; then
 			}')
 
 		[[ -n $input ]] || fatal 'test input not found'
-		input >"$input_file"
+		echo "$input" >"$input_file"
 	}
 else
 	# download input if does not exist

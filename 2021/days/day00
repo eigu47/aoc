@@ -2,6 +2,8 @@
 
 res=0
 
+mapfile -t input
+
 while read -r input; do
 	:
 done

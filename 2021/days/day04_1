@@ -1,0 +1,50 @@
+#!/usr/bin/env bash
+
+res=0
+
+IFS=',' read -r -a numbers
+
+declare -A map
+declare -A wins
+declare -A drawn
+grid=()
+
+# store bingo cards rows and columns
+i=0
+while read -r -a line; do
+	[[ -z "${line[*]}" ]] && continue
+
+	box=$((i / 5))
+	for j in "${!line[@]}"; do
+		# echo "$box $i $j ${line[j]}"
+		map["${line[j]}"]="${map[${line[j]}]} ${box}row${i} ${box}col${j}"
+		grid["$box"]="${grid[$box]} ${line[$j]}"
+	done
+	((i++))
+done
+
+# loop over numbers and count wins in row/col
+found=
+last_num=
+for num in "${numbers[@]}"; do
+	for pos in ${map[$num]}; do
+		drawn["$num"]=true
+		if ((++wins["$pos"] == 5)); then
+			# echo found $num $pos
+			found="$pos"
+			last_num="$num"
+			break
+		fi
+	done
+	[[ -n "$found" ]] && break
+done
+
+re='([0-9]+)(row|box)([0-9]+)'
+[[ "$found" =~ $re ]]
+box="${BASH_REMATCH[1]}"
+
+for num in ${grid[$box]}; do
+	[[ -z "${drawn[$num]}" ]] && ((res += num))
+done
+
+echo $((res * last_num))
