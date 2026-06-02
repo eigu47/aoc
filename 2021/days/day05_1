@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+
+res=0
+
+# mapfile -t input
+declare -A map
+
+re='^([0-9]+),([0-9]+) -> ([0-9]+),([0-9]+)$'
+while read -r input; do
+	[[ $input =~ $re ]]
+	x1="${BASH_REMATCH[1]}"
+	y1="${BASH_REMATCH[2]}"
+	x2="${BASH_REMATCH[3]}"
+	y2="${BASH_REMATCH[4]}"
+
+	((x1 != x2)) && ((y1 != y2)) && continue
+
+	# swap values so x1 is lower
+	((x1 > x2)) && ((x1 ^= x2, x2 ^= x1, x1 ^= x2))
+	for ((i = x1; i <= x2 && y1 == y2; i++)); do
+		((map["$i,$y1"]++))
+	done
+
+	((y1 > y2)) && ((y1 ^= y2, y2 ^= y1, y1 ^= y2))
+	for ((i = y1; i <= y2 && x1 == x2; i++)); do
+		((map["$x1,$i"]++))
+	done
+done
+
+for val in "${map[@]}"; do
+	((val >= 2)) && ((res++))
+done
+
+echo "$res"
