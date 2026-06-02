@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+
+res=0
+
+# mapfile -t input
+declare -A map
+
+re='^([0-9]+),([0-9]+) -> ([0-9]+),([0-9]+)$'
+while read -r input; do
+	[[ $input =~ $re ]]
+	x1="${BASH_REMATCH[1]}"
+	y1="${BASH_REMATCH[2]}"
+	x2="${BASH_REMATCH[3]}"
+	y2="${BASH_REMATCH[4]}"
+
+	# get direction
+	((dx = (x2>x1) - (x2<x1)))
+	((dy = (y2>y1) - (y2<y1)))
+	# echo $x1,$y1 $x2,$y2
+	# echo dx:$dx dy:$dy
+
+	# move 1 space per loop
+	while :; do
+		((map["$x1,$y1"]++))
+
+		((x1 == x2 && y1 == y2)) && break
+		((x1+=dx))
+		((y1+=dy))
+	done
+done
+
+for val in "${map[@]}"; do
+	((val >= 2)) && ((res++))
+done
+
+echo "$res"
