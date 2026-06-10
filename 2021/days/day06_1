@@ -25,7 +25,11 @@ done <<<"$state_line,"
 # declare -p state
 
 declare -A temp
-days=80
+# part 1
+# days=80
+
+# part 2
+days=256 
 for ((i = 0; i < days; i++)); do
 	temp=()
 	for num in "${!state[@]}"; do
