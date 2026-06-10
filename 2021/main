@@ -64,8 +64,8 @@ if [[ -n $test_mode ]]; then
 		echo "scraping test input for day $day..."
 		input=$(curl -fsS "https://adventofcode.com/$year/day/$day" |
 			sed -nE "
-			/<\/code><\/pre>/q
-			/<pre><code>/,/<\/code><\/code><\/pre>/{
+			/(<\/(pre|code)>){2}/q
+			/(<(pre|code)>){2}/,\${
 				s/<\/?(code|pre)>//g
 				s/&nbsp;/ /g
 				s/&lt;/</g
@@ -77,7 +77,7 @@ if [[ -n $test_mode ]]; then
 			}")
 
 		[[ -n $input ]] || fatal 'test input not found'
-		echo "$input" >"$input_file"
+		echo "$input" | tee "$input_file"
 	}
 else
 	# download input if does not exist

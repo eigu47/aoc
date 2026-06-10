@@ -1,0 +1,54 @@
+#!/usr/bin/env bash
+
+res=0
+
+# brute force
+# days=80
+# for ((i = 0; i < days; i++)); do
+# 	for idx in "${!nums[@]}"; do
+# 		if ((nums[idx]-- == 0)); then
+# 			nums[idx]=6
+# 			nums+=(8)
+# 		fi
+# 	done
+# done
+
+read -r state_line
+state_line=${state_line##* }
+
+declare -A state
+while read -r -d ',' num; do
+	((state[$num]++))
+done <<<"$state_line,"
+
+# echo day 0
+# declare -p state
+
+declare -A temp
+days=80
+for ((i = 0; i < days; i++)); do
+	temp=()
+	for num in "${!state[@]}"; do
+		((state[$num] <= 0)) && continue
+		((num <= 0)) && {
+			temp[6]=$((state[7] + state[0]))
+			temp[8]=$((state[9] + state[0]))
+			continue
+		}
+		temp[$((num - 1))]=$((state[$num]))
+	done
+
+	state=()
+	for k in "${!temp[@]}"; do
+		state["$k"]=$((temp[$k]))
+	done
+
+	# echo day $((i + 1))
+	# declare -p state
+done
+
+for num in "${state[@]}"; do
+	((res += num))
+done
+
+echo "$res"
